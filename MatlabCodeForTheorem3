@@ -1,0 +1,187 @@
+function K=CDesignT3(A,A1,A2,B,C,l1,l2,h1,h2,d21,d22)
+% This code is developed for the theorem 3 
+% A, A1, A2, B and C are system matrices
+% l1 and l2 are lower bound of delay 
+% h1 and h2 are upper bound of delay
+% d21 and d22 are upper bound of delay derivative 
+%% 
+n=size(A,1);
+m=size(B,2);
+q=size(C,1);
+%% LMI set
+setlmis([]); 
+%% define unknown variables
+Y=lmivar(1,[n 1]);
+X=lmivar(2,[m n]);
+bQ1=lmivar(1,[n 1]); % to represent $$\bar{Q}_1$$
+bQ2=lmivar(1,[n 1]);
+tQ1=lmivar(1,[n 1]);
+tQ2=lmivar(1,[n 1]);
+bR1=lmivar(1,[n 1]);
+bR2=lmivar(1,[n 1]);
+tR1=lmivar(1,[n 1]);
+tR2=lmivar(1,[n 1]);
+bS1=lmivar(1,[n 1]);
+bS2=lmivar(1,[n 1]);
+tS1=lmivar(1,[n 1]);
+tS2=lmivar(1,[n 1]);
+bT1=lmivar(1,[n 1]);
+bT2=lmivar(1,[n 1]);
+tT1=lmivar(1,[n 1]);
+tT2=lmivar(1,[n 1]);
+bU1=lmivar(1,[n 1]);
+bU2=lmivar(1,[n 1]);
+tU1=lmivar(1,[n 1]);
+tU2=lmivar(1,[n 1]);
+bW1=lmivar(1,[n 1]);
+bW2=lmivar(1,[n 1]);
+%gamma=lmivar(1,[1 1]);
+%% first matrix LMI condition
+% entry (1,1)
+lmiterm([1 1 1 Y],A,1,'s');     % AY+YA'
+lmiterm([1 1 1 X],B,1,'s');     % BX+X'B'
+lmiterm([1 1 1 bQ1],1,1); 
+lmiterm([1 1 1 bQ2],1,1); 
+lmiterm([1 1 1 bT1],-1,1); 
+lmiterm([1 1 1 bT2],-1,1); 
+% entry to (1,2)
+lmiterm([1 1 2 Y],1,1);
+% entry to (1,3)
+lmiterm([1 1 3 Y],1,1);
+% entry to (1,4)
+lmiterm([1 1 4 bU1],A1,1);
+% entry to (1,5)
+lmiterm([1 1 5 bU2],A2,1);
+% entries to 1,6 and 1,7 are zero
+% entry to (1,8)
+lmiterm([1 1 8 Y],l1,A');
+lmiterm([1 1 8 -X],l1,B');
+% entry to (1,9)
+lmiterm([1 1 9 Y],l2,A');
+lmiterm([1 1 9 -X],l2,B');
+% entry to (1,10)
+lmiterm([1 1 10 Y],(h1-l1),A');
+lmiterm([1 1 10 -X],(h1-l1),B');
+% entry to (1,11)
+lmiterm([1 1 11 Y],(h2-l2),A');
+lmiterm([1 1 11 -X],(h2-l2),B'); 
+%row 2
+% entry to (2,2)
+lmiterm([1 2 2 tQ1],-1,1);
+lmiterm([1 2 2 tT1],-1,1);
+lmiterm([1 2 2 tU1],-1,1);
+lmiterm([1 2 2 tR1],1,1);
+lmiterm([1 2 2 tS1],1,1);
+% entry to (2,3) is zeo
+% entry to (2,4)
+lmiterm([1 2 4 bU1],1,1);
+lmiterm([1 2 4 bW1],-1,1);
+% entry to (2,5) is zero
+% entry to (2,6)
+lmiterm([1 2 6 bW1],1,1);
+% entries (2,7) to (2,11) are zero
+% row 3
+% entry (3,3)
+lmiterm([1 3 3 tQ2],-1,1);
+lmiterm([1 3 3 tT2],-1,1);
+lmiterm([1 3 3 tU2],-1,1);
+lmiterm([1 3 3 tR2],1,1);
+lmiterm([1 3 3 tS2],1,1);
+% entry (3,4) is zero
+% entry (3,5)
+lmiterm([1 3 5 bU2],1,1);
+lmiterm([1 3 5 bW2],-1,1);
+% entry (3,6) is zero
+% entry (3,7) 
+lmiterm([1 3 7 bW2],1,1);
+% entries (3,8) to (3,11) are zero
+% row 4
+% entry (4,4)
+lmiterm([1 4 4 bS1],(1-d21),-1);
+lmiterm([1 4 4 bU1],-1,2);
+lmiterm([1 4 4 bW1],1,1);
+lmiterm([1 4 4 -bW1],1,1);
+% entry (4,5) is zero
+% entry (4,6)
+lmiterm([1 4 6 bU1],1,1);
+lmiterm([1 4 6 bW1],-1,1);
+% entry (4,7) is zero
+% entry (4,8)
+lmiterm([1 4 8 bU1],A1',l1);
+% entry (4,9)
+lmiterm([1 4 9 bU1],A1',l2);
+% entry (4,10)
+lmiterm([1 4 10 bU1],A1',(h1-l1));
+% entry (4,11)
+lmiterm([1 4 11 bU1],A1',(h2-l2));
+% row 5
+% entry (5,5)
+lmiterm([1 5 5 bS2],(1-d22),-1);
+lmiterm([1 5 5 bU2],-1,2);
+lmiterm([1 5 5 bW2],1,1);
+lmiterm([1 5 5 -bW2],1,1);
+% entry (5,6) is zero
+% entry (5,7)
+lmiterm([1 5 7 bU2],1,1);
+lmiterm([1 5 7 bW2],-1,1);
+% entry (5,8)
+lmiterm([1 5 8 bU2],A2',l1);
+% entry (5,9)
+lmiterm([1 5 9 bU2],A2',l2);
+% entry (5,10)
+lmiterm([1 5 10 bU2],A2',(h1-l1));
+% entry (5,11)
+lmiterm([1 5 11 bU2],A2',(h2-l2));
+% row 6
+% entry (6,6)
+lmiterm([1 6 6 bR1],-1,1);
+lmiterm([1 6 6 bU1],-1,1);
+% row 7
+% entry (7,7)
+lmiterm([1 7 7 bR2],-1,1);
+lmiterm([1 7 7 bU2],-1,1);
+% row 8
+% entry (8,8)
+lmiterm([1 8 8 bT1],-1,l1);
+% row 9
+% entry (9,9)
+lmiterm([1 9 9 bT2],-1,l2);
+% row 10
+% entry (10,10)
+lmiterm([1 10 10 bU1],-1,(h1-l1));
+% row 11
+% entry (11,11)
+lmiterm([1 11 11 bU2],-1,(h2-l2));
+
+%% condition 2
+lmiterm([-2 1 1 bU1],1,1);
+lmiterm([-2 1 2 bW1],1,1);
+lmiterm([-2 2 2 bU1],1,1);
+%% condition 3
+lmiterm([-3 1 1 bU2],1,1);
+lmiterm([-3 1 2 bW2],1,1);
+lmiterm([-3 2 2 bU2],1,1);
+% conditions of the positiveness 
+lmiterm([-4 1 1 Y],1,1);        % Y>0
+lmiterm([-5 1 1 bQ1],1,1);
+lmiterm([-6 1 1 bQ2],1,1);
+lmiterm([-7 1 1 tQ1],1,1);
+lmiterm([-8 1 1 tQ2],1,1);
+lmiterm([-9 1 1 bR1],1,1);
+lmiterm([-10 1 1 bR2],1,1);
+lmiterm([-11 1 1 tR1],1,1);
+lmiterm([-12 1 1 tR2],1,1);
+lmiterm([-13 1 1 bS1],1,1);
+lmiterm([-14 1 1 bS2],1,1);
+lmiterm([-15 1 1 tS1],1,1);
+lmiterm([-16 1 1 tS2],1,1);
+lmiterm([-17 1 1 bU1],1,1);
+lmiterm([-18 1 1 tU1],1,1);
+lmiterm([-19 1 1 tU2],1,1);
+%% solution
+LMIs=getlmis;
+[tmin,xfeas]=feasp(LMIs);
+Y=dec2mat(LMIs,xfeas,Y);
+X=dec2mat(LMIs,xfeas,X);
+K=X*inv(Y);
+end
